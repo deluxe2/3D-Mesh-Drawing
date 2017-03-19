@@ -43,7 +43,7 @@ namespace _3D_Mesh_Drawing
             world = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
             camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, MathHelper.PiOver4,
                 (float) graphics.PreferredBackBufferWidth / (float) graphics.PreferredBackBufferHeight, 0.1f, 1000.0f,
-                1.0f);
+                0.1f);
             mousePos = Mouse.GetState().Position.ToVector2();
 
             center = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
@@ -144,45 +144,79 @@ namespace _3D_Mesh_Drawing
             var cameraPosition = camera.Position;
             var cameraTarget = camera.Target;
 
+            var state = Keyboard.GetState();
+
             
 
             if (Mouse.GetState().MiddleButton == ButtonState.Pressed && mousePos != center)
             {
                 var mousedif = lastmousepos - mousePos;
-                cameraTarget = Vector3.Transform(camera.Target,
+                cameraTarget += Vector3.Transform(camera.Target - camera.Position,
                     Matrix.CreateRotationY(MathHelper.ToRadians(mousedif.X *(graphics.PreferredBackBufferWidth / 2.0f) / 180)) * Matrix.CreateRotationX(MathHelper.ToRadians(mousedif.Y * (graphics.PreferredBackBufferHeight / 2.0f) / 180)));
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.W))
+            if (state.IsKeyDown(Keys.F))
             {
-                cameraPosition += GetMovingVector(Matrix.CreateRotationY(0)) * camera.CameraSpeed;
-                cameraTarget += GetMovingVector(Matrix.CreateRotationY(0)) * camera.CameraSpeed;
+                cameraTarget = Vector3.Zero;
+                cameraPosition = new Vector3(0, 0, 10);
             }
 
-            if (Keyboard.GetState().IsKeyDown(Keys.S))
+            if (state.IsKeyDown(Keys.LeftShift))
             {
-                cameraPosition += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi)) * camera.CameraSpeed;
-                cameraTarget += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi)) * camera.CameraSpeed;
+                if (state.IsKeyDown(Keys.W))
+                {
+                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
+                        Matrix.CreateRotationX(MathHelper.ToRadians(10)));
+                }
+                if (state.IsKeyDown(Keys.S))
+                {
+                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
+                        Matrix.CreateRotationX(MathHelper.ToRadians(-10)));
+                }
+                if (state.IsKeyDown(Keys.A))
+                {
+                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
+                        Matrix.CreateRotationY(MathHelper.ToRadians(10)));
+                }
+                if (state.IsKeyDown(Keys.D))
+                {
+                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
+                        Matrix.CreateRotationY(MathHelper.ToRadians(-10)));
+                }
             }
-            if (Keyboard.GetState().IsKeyDown(Keys.A))
+            else
             {
-                cameraPosition += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi/2)) * camera.CameraSpeed;
-                cameraTarget += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi/2)) * camera.CameraSpeed;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.D))
-            {
-                cameraPosition += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi/-2)) * camera.CameraSpeed;
-                cameraTarget += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi/-2)) * camera.CameraSpeed;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.Q))
-            {
-                cameraPosition += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi/2)) * camera.CameraSpeed;
-                cameraTarget += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi/2)) * camera.CameraSpeed;
-            }
-            if (Keyboard.GetState().IsKeyDown(Keys.E))
-            {
-                cameraPosition += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi / -2)) * camera.CameraSpeed;
-                cameraTarget += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi / -2)) * camera.CameraSpeed;
+                if (state.IsKeyDown(Keys.W))
+                {
+                    cameraPosition += GetMovingVector(Matrix.CreateRotationX(0)) * camera.CameraSpeed;
+                    cameraTarget += GetMovingVector(Matrix.CreateRotationX(0)) * camera.CameraSpeed;
+                }
+
+                if (state.IsKeyDown(Keys.S))
+                {
+                    cameraPosition += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi)) * camera.CameraSpeed;
+                    cameraTarget += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi)) * camera.CameraSpeed;
+                }
+                if (state.IsKeyDown(Keys.A))
+                {
+                    cameraPosition += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi / 2)) * camera.CameraSpeed;
+                    cameraTarget += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi / 2)) * camera.CameraSpeed;
+                }
+                if (state.IsKeyDown(Keys.D))
+                {
+                    cameraPosition += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi / -2)) * camera.CameraSpeed;
+                    cameraTarget += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi / -2)) * camera.CameraSpeed;
+                }
+                if (state.IsKeyDown(Keys.Q))
+                {
+                    cameraPosition += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi / 2)) * camera.CameraSpeed;
+                    cameraTarget += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi / 2)) * camera.CameraSpeed;
+                }
+                if (state.IsKeyDown(Keys.E))
+                {
+                    cameraPosition += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi / -2)) * camera.CameraSpeed;
+                    cameraTarget += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi / -2)) * camera.CameraSpeed;
+                }
             }
 
             camera.UpdatePositions(cameraPosition, cameraTarget);
