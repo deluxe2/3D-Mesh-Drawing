@@ -15,6 +15,9 @@ namespace _3D_Mesh_Drawing
 
         private Model cube;
         private Model ball;
+        private Model worldModel;
+
+        private World World;
 
 
         private Matrix world;
@@ -41,12 +44,12 @@ namespace _3D_Mesh_Drawing
         {
             // TODO: Add your initialization logic here
             world = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
+
             camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, MathHelper.PiOver4,
                 (float) graphics.PreferredBackBufferWidth / (float) graphics.PreferredBackBufferHeight, 0.1f, 1000.0f,
                 0.1f);
             mousePos = Mouse.GetState().Position.ToVector2();
-
-            center = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+          
 
             base.Initialize();
         }
@@ -62,6 +65,7 @@ namespace _3D_Mesh_Drawing
 
             ball = Content.Load<Model>("ball");
             cube = Content.Load<Model>("cube");
+            World = new World(20f, Content.Load<Model>("CubePlaned"));
 
 
             // TODO: use this.Content to load your game content here
@@ -118,20 +122,7 @@ namespace _3D_Mesh_Drawing
                 mesh.Draw();
             }
 
-            foreach (var mesh in cube.Meshes)
-            {
-                foreach (var effect1 in mesh.Effects)
-                {
-                    var effect = (BasicEffect)effect1;
-                    effect.World = Matrix.CreateScale(10f)* world;
-                    effect.View = camera.View;
-                    effect.Projection = camera.Projection;
-                    effect.EnableDefaultLighting();
-                    effect.PreferPerPixelLighting = true;
-                }
-
-                mesh.Draw();
-            }
+            World.DrawWorld(camera);
 
             base.Draw(gameTime);
         }
@@ -165,22 +156,22 @@ namespace _3D_Mesh_Drawing
             {
                 if (state.IsKeyDown(Keys.W))
                 {
-                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
+                    cameraTarget = Vector3.Transform(camera.Target - camera.Position,
                         Matrix.CreateRotationX(MathHelper.ToRadians(10)));
                 }
                 if (state.IsKeyDown(Keys.S))
                 {
-                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
+                    cameraTarget = Vector3.Transform(camera.Target - camera.Position,
                         Matrix.CreateRotationX(MathHelper.ToRadians(-10)));
                 }
                 if (state.IsKeyDown(Keys.A))
                 {
-                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
+                    cameraTarget = Vector3.Transform(camera.Target - camera.Position,
                         Matrix.CreateRotationY(MathHelper.ToRadians(10)));
                 }
                 if (state.IsKeyDown(Keys.D))
                 {
-                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
+                    cameraTarget = Vector3.Transform(camera.Target - camera.Position,
                         Matrix.CreateRotationY(MathHelper.ToRadians(-10)));
                 }
             }

@@ -11,16 +11,16 @@ namespace _3DHelper
 
         private Octree oct;
 
-        private BoundingBox World;
+        private IWorld World;
 
         public float Gravity { get; set; }
 
-        public PhysikEngine(float gravity, BoundingBox world)
+        public PhysikEngine(float gravity, IWorld world)
         {
             Gravity = gravity;
             objects = new List<IPhysikObject>();
             World = world;
-            oct = new Octree(4, 0, world.Max.X * 2, Vector3.Zero);
+            oct = new Octree(4, 0, world.CubeSize, Vector3.Zero);
         }
 
         public void AddObject(IPhysikObject obj)
@@ -57,6 +57,7 @@ namespace _3DHelper
                         }
                     }
                 }
+                World.WorldCollision(physikObject);
             }
         }
 
