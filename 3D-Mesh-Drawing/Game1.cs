@@ -41,8 +41,8 @@ namespace _3D_Mesh_Drawing
         {
             // TODO: Add your initialization logic here
             world = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
-            camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, MathHelper.PiOver4,
-                (float) graphics.PreferredBackBufferWidth / (float) graphics.PreferredBackBufferHeight, 0.1f, 1000.0f,
+            camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, MathHelper.PiOver2,
+                (float) graphics.PreferredBackBufferWidth / (float) graphics.PreferredBackBufferHeight, 0.01f, 100.0f,
                 0.1f);
             mousePos = Mouse.GetState().Position.ToVector2();
 
@@ -61,7 +61,7 @@ namespace _3D_Mesh_Drawing
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ball = Content.Load<Model>("ball");
-            cube = Content.Load<Model>("cube");
+            cube = Content.Load<Model>("CubePlaned");
 
 
             // TODO: use this.Content to load your game content here
@@ -88,7 +88,7 @@ namespace _3D_Mesh_Drawing
                 Exit();
 
             // TODO: Add your update logic here
-            UpdateCamera(gameTime);
+            camera.UpdateCamera();
 
             base.Update(gameTime);
         }
@@ -123,111 +123,14 @@ namespace _3D_Mesh_Drawing
                 foreach (var effect1 in mesh.Effects)
                 {
                     var effect = (BasicEffect)effect1;
-                    effect.World = Matrix.CreateScale(10f)* world;
+                    effect.World = Matrix.CreateScale(50f)* world;
                     effect.View = camera.View;
                     effect.Projection = camera.Projection;
-                    effect.EnableDefaultLighting();
-                    effect.PreferPerPixelLighting = true;
                 }
-
                 mesh.Draw();
             }
 
             base.Draw(gameTime);
-        }
-
-        private void UpdateCamera(GameTime gameTime)
-        {
-            var lastmousepos = new Vector2(mousePos.X,mousePos.Y);
-            mousePos = Mouse.GetState().Position.ToVector2();
-
-            var cameraPosition = camera.Position;
-            var cameraTarget = camera.Target;
-
-            var state = Keyboard.GetState();
-
-            
-
-            if (Mouse.GetState().MiddleButton == ButtonState.Pressed && mousePos != center)
-            {
-                var mousedif = lastmousepos - mousePos;
-                cameraTarget += Vector3.Transform(camera.Target - camera.Position,
-                    Matrix.CreateRotationY(MathHelper.ToRadians(mousedif.X *(graphics.PreferredBackBufferWidth / 2.0f) / 180)) * Matrix.CreateRotationX(MathHelper.ToRadians(mousedif.Y * (graphics.PreferredBackBufferHeight / 2.0f) / 180)));
-            }
-
-            if (state.IsKeyDown(Keys.F))
-            {
-                cameraTarget = Vector3.Zero;
-                cameraPosition = new Vector3(0, 0, 10);
-            }
-
-            if (state.IsKeyDown(Keys.LeftShift))
-            {
-                if (state.IsKeyDown(Keys.W))
-                {
-                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
-                        Matrix.CreateRotationX(MathHelper.ToRadians(10)));
-                }
-                if (state.IsKeyDown(Keys.S))
-                {
-                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
-                        Matrix.CreateRotationX(MathHelper.ToRadians(-10)));
-                }
-                if (state.IsKeyDown(Keys.A))
-                {
-                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
-                        Matrix.CreateRotationY(MathHelper.ToRadians(10)));
-                }
-                if (state.IsKeyDown(Keys.D))
-                {
-                    cameraTarget += Vector3.Transform(camera.Target - camera.Position,
-                        Matrix.CreateRotationY(MathHelper.ToRadians(-10)));
-                }
-            }
-            else
-            {
-                if (state.IsKeyDown(Keys.W))
-                {
-                    cameraPosition += GetMovingVector(Matrix.CreateRotationX(0)) * camera.CameraSpeed;
-                    cameraTarget += GetMovingVector(Matrix.CreateRotationX(0)) * camera.CameraSpeed;
-                }
-
-                if (state.IsKeyDown(Keys.S))
-                {
-                    cameraPosition += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi)) * camera.CameraSpeed;
-                    cameraTarget += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi)) * camera.CameraSpeed;
-                }
-                if (state.IsKeyDown(Keys.A))
-                {
-                    cameraPosition += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi / 2)) * camera.CameraSpeed;
-                    cameraTarget += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi / 2)) * camera.CameraSpeed;
-                }
-                if (state.IsKeyDown(Keys.D))
-                {
-                    cameraPosition += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi / -2)) * camera.CameraSpeed;
-                    cameraTarget += GetMovingVector(Matrix.CreateRotationY(MathHelper.Pi / -2)) * camera.CameraSpeed;
-                }
-                if (state.IsKeyDown(Keys.Q))
-                {
-                    cameraPosition += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi / 2)) * camera.CameraSpeed;
-                    cameraTarget += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi / 2)) * camera.CameraSpeed;
-                }
-                if (state.IsKeyDown(Keys.E))
-                {
-                    cameraPosition += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi / -2)) * camera.CameraSpeed;
-                    cameraTarget += GetMovingVector(Matrix.CreateRotationX(MathHelper.Pi / -2)) * camera.CameraSpeed;
-                }
-            }
-
-            camera.UpdatePositions(cameraPosition, cameraTarget);
-
-        }
-
-        private Vector3 GetMovingVector(Matrix rotation)
-        {
-
-                return Vector3.Transform( Vector3.Normalize(camera.Target-camera.Position),rotation) ;
-
         }
     }
 }

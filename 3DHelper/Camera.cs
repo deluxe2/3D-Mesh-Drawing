@@ -63,5 +63,77 @@ namespace _3DHelper
 
             view = Matrix.CreateLookAt(position, target, Vector3.Up);
         }
+
+        public void UpdateCamera()
+        {
+
+            var state = Keyboard.GetState();
+
+
+            if (state.IsKeyDown(Keys.F))
+            {
+                target = Vector3.Zero;
+                position = new Vector3(0, 0, 10);
+            }
+
+            if (state.IsKeyDown(Keys.LeftShift))
+            {
+                if (state.IsKeyDown(Keys.W))
+                {
+                    target = Vector3.Transform(Target - Position,
+                        Matrix.CreateRotationX(MathHelper.ToRadians(5)) * Matrix.CreateTranslation(Position));
+                }
+                if (state.IsKeyDown(Keys.S))
+                {
+                    target = Vector3.Transform(Target - Position,
+                        Matrix.CreateTranslation(Position)*Matrix.CreateRotationX(MathHelper.ToRadians(-5)) );
+                }
+                if (state.IsKeyDown(Keys.A))
+                {
+                    target = Vector3.Transform(Target - Position,
+                        Matrix.CreateTranslation(Position)*Matrix.CreateRotationY(MathHelper.ToRadians(5)));
+                }
+                if (state.IsKeyDown(Keys.D))
+                {
+                    target = Vector3.Transform(Target - Position,
+                        Matrix.CreateTranslation(Position)*Matrix.CreateRotationY(MathHelper.ToRadians(-5)));
+                }
+            }
+            else
+            {
+                if (state.IsKeyDown(Keys.W))
+                {
+                    MoveCamera(Vector3.Forward);
+                }
+
+                if (state.IsKeyDown(Keys.S))
+                {
+                    MoveCamera(Vector3.Backward);
+                }
+                if (state.IsKeyDown(Keys.A))
+                {
+                    MoveCamera(Vector3.Left);
+                }
+                if (state.IsKeyDown(Keys.D))
+                {
+                    MoveCamera(Vector3.Right);
+                }
+                if (state.IsKeyDown(Keys.Q))
+                {
+                    MoveCamera(Vector3.Up);
+                }
+                if (state.IsKeyDown(Keys.E))
+                {
+                    MoveCamera(Vector3.Down);
+                }
+            }
+
+        }
+
+        private void MoveCamera(Vector3 direction)
+        {
+            target += direction*CameraSpeed;
+            position += target;
+        }
     }
 }
