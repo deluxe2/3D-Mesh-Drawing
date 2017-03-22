@@ -42,8 +42,10 @@ namespace _3D_Mesh_Drawing
             // TODO: Add your initialization logic here
             camera = new Camera(new Vector3(0, 0, 2000), new Vector3(0,-0.2f,-1), MathHelper.PiOver4,
                 (float) graphics.PreferredBackBufferWidth / (float) graphics.PreferredBackBufferHeight, 1.0f, 10000.0f,
-                2.0f);
+                5.0f);
             mousePos = Mouse.GetState().Position.ToVector2();
+
+            world = new World(2000f, this.GraphicsDevice);
 
             base.Initialize();
         }
@@ -56,9 +58,7 @@ namespace _3D_Mesh_Drawing
         {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
             ball = Content.Load<Model>("ball");
-            world = new World(2000f, Content.Load<Model>("CubePlaned"));
 
             engine = new PhysikEngine(9.81f, world,true);
 
@@ -115,7 +115,7 @@ namespace _3D_Mesh_Drawing
             // TODO: Add your drawing code here
             engine.Draw(camera);
 
-            //World.DrawWorld(camera);
+            world.DrawWorld(camera);
 
             base.Draw(gameTime);
         }

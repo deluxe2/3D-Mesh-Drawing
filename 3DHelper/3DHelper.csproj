@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="Camera.cs" />
     <Compile Include="IWorld.cs" />
+    <Compile Include="Line.cs" />
     <Compile Include="Octree.cs" />
     <Compile Include="PhysikEngine.cs" />
     <Compile Include="IPhysikObject.cs" />
@@ -59,7 +60,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resource1.resx</DependentUpon>
     </Compile>
-    <Compile Include="VectorHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="OpenTK.dll.config" />
