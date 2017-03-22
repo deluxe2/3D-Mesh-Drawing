@@ -7,15 +7,14 @@ namespace _3DHelper
 {
     public class Camera
     {
-        private float fovangle;
-        private float aspectratio;
-        private float near;
-        private float far;
-
         private Vector3 position;
         private Vector3 target;
 
-        private Matrix view;
+        private float yaw;
+        private float pitch;
+
+        private Quaternion rotation;
+
         private readonly Matrix projection;
 
         public float CameraSpeed { get; set; }
@@ -31,44 +30,32 @@ namespace _3DHelper
         }
 
 
-        public Matrix View
-        {
-            get { return view; }
-        }
+        public Matrix View => Matrix.CreateLookAt(position, target, Vector3.Transform(Vector3.Up, Matrix.CreateFromQuaternion(rotation)));
 
         public Matrix Projection
         {
             get { return projection; }
         }
 
-        public Camera(Vector3 position,Vector3 target,float fovangle, float aspectratio, float near, float far, float speed)
+        public Camera(Vector3 position, Vector3 target, float fovangle, float aspectratio, float near, float far,
+            float speed)
         {
-            this.fovangle = fovangle;
-            this.aspectratio = aspectratio;
-            this.near = near;
-            this.far = far;
-
             CameraSpeed = speed;
 
             this.position = position;
-            this.target = target;
+            this.target = position + Vector3.Normalize(target);
+
+            rotation = Quaternion.Identity;
+
+            yaw = 0;
+            pitch = 0;
 
             projection = Matrix.CreatePerspectiveFieldOfView(fovangle, aspectratio, near, far);
         }
 
-        public void UpdatePositions(Vector3 position, Vector3 target)
-        {
-            this.position = position;
-            this.target = target;
-
-            view = Matrix.CreateLookAt(position, target, Vector3.Up);
-        }
-
         public void UpdateCamera()
         {
-
             var state = Keyboard.GetState();
-
 
             if (state.IsKeyDown(Keys.F))
             {
@@ -80,24 +67,22 @@ namespace _3DHelper
             {
                 if (state.IsKeyDown(Keys.W))
                 {
-                    target = Vector3.Transform(Target - Position,
-                        Matrix.CreateRotationX(MathHelper.ToRadians(5)) * Matrix.CreateTranslation(Position));
+                    pitch += MathHelper.ToRadians(5.0f/60);
                 }
                 if (state.IsKeyDown(Keys.S))
                 {
-                    target = Vector3.Transform(Target - Position,
-                        Matrix.CreateTranslation(Position)*Matrix.CreateRotationX(MathHelper.ToRadians(-5)) );
+                    pitch -= MathHelper.ToRadians(5.0f / 60);
                 }
                 if (state.IsKeyDown(Keys.A))
                 {
-                    target = Vector3.Transform(Target - Position,
-                        Matrix.CreateTranslation(Position)*Matrix.CreateRotationY(MathHelper.ToRadians(5)));
+                    yaw += MathHelper.ToRadians(5.0f / 60);
                 }
                 if (state.IsKeyDown(Keys.D))
                 {
-                    target = Vector3.Transform(Target - Position,
-                        Matrix.CreateTranslation(Position)*Matrix.CreateRotationY(MathHelper.ToRadians(-5)));
+                    yaw -= MathHelper.ToRadians(5.0f / 60);
                 }
+                rotation = Quaternion.CreateFromYawPitchRoll(yaw,pitch,0.0f);
+                target = Vector3.Transform(Vector3.Forward, Matrix.CreateFromQuaternion(rotation) * Matrix.CreateTranslation(position));
             }
             else
             {
@@ -127,13 +112,13 @@ namespace _3DHelper
                     MoveCamera(Vector3.Down);
                 }
             }
-
         }
 
         private void MoveCamera(Vector3 direction)
         {
-            target += direction*CameraSpeed;
-            position += target;
+            var add = Vector3.Transform(direction, Matrix.CreateFromQuaternion(rotation))*CameraSpeed;
+            position += add;
+            target += add;
         }
     }
 }

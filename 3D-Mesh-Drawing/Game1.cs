@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using _3DHelper;
@@ -12,26 +13,22 @@ namespace _3D_Mesh_Drawing
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
-
-        private Model cube;
         private Model ball;
-        private Model worldModel;
 
-        private World World;
+        private World world;
 
-
-        private Matrix world;
+        private PhysikEngine engine;
 
         private Camera camera;
 
         private Vector2 mousePos;
 
-        private Vector2 center;
-
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
         }
 
         /// <summary>
@@ -43,13 +40,10 @@ namespace _3D_Mesh_Drawing
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            world = Matrix.CreateTranslation(0.0f, 0.0f, 0.0f);
-
-            camera = new Camera(new Vector3(0, 0, 10), Vector3.Zero, MathHelper.PiOver4,
-                (float) graphics.PreferredBackBufferWidth / (float) graphics.PreferredBackBufferHeight, 0.1f, 1000.0f,
-                0.1f);
+            camera = new Camera(new Vector3(0, 0, 2000), new Vector3(0,-0.2f,-1), MathHelper.PiOver4,
+                (float) graphics.PreferredBackBufferWidth / (float) graphics.PreferredBackBufferHeight, 1.0f, 10000.0f,
+                2.0f);
             mousePos = Mouse.GetState().Position.ToVector2();
-          
 
             base.Initialize();
         }
@@ -64,8 +58,19 @@ namespace _3D_Mesh_Drawing
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             ball = Content.Load<Model>("ball");
-            cube = Content.Load<Model>("cube");
-            World = new World(20f, Content.Load<Model>("CubePlaned"));
+            world = new World(2000f, Content.Load<Model>("CubePlaned"));
+
+            engine = new PhysikEngine(9.81f, world,true);
+
+            engine.AddObject(new Ball(ball,Vector3.Zero,Vector3.Zero, true, 1,1));
+
+            var r = new Random();
+            for (int i = 0; i < 50; i++)
+            {
+                engine.AddObject(new Ball(ball, new Vector3(r.Next(-100, 100), r.Next(-100, 100), r.Next(-100, 100)),
+                    new Vector3(r.Next(10, 100), r.Next(10, 100), r.Next(10, 100)), false,
+                    0.95f, (float)(r.Next(10, 100) + r.NextDouble())));
+            }
 
 
             // TODO: use this.Content to load your game content here
@@ -93,6 +98,7 @@ namespace _3D_Mesh_Drawing
 
             // TODO: Add your update logic here
             camera.UpdateCamera();
+            engine.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -104,25 +110,12 @@ namespace _3D_Mesh_Drawing
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.RasterizerState = RasterizerState.CullClockwise;
 
             // TODO: Add your drawing code here
+            engine.Draw(camera);
 
-            foreach (ModelMesh mesh in ball.Meshes)
-            {
-                foreach (var effect1 in mesh.Effects)
-                {
-                    var effect = (BasicEffect) effect1;
-                    effect.World = world;
-                    effect.View = camera.View;
-                    effect.Projection = camera.Projection;
-                    effect.EnableDefaultLighting();
-                    effect.PreferPerPixelLighting = true;
-                }
-
-                mesh.Draw();
-            }
-
-            World.DrawWorld(camera);
+            //World.DrawWorld(camera);
 
             base.Draw(gameTime);
         }

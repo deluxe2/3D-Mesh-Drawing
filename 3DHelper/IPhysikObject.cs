@@ -12,12 +12,11 @@ namespace _3DHelper
     {
         Vector3 Position { get; set; }
         Vector3 Speed { get; set; }
-        BoundingSphere Bound { get; set; }
+        BoundingSphere Bound { get; }
         bool Static { get; set; }
-        bool Destructable { get; set; }
-        float Mass { get; set; }
-        float Elasticity { get; set; }
-        Model Model { get; set; }
+        float Mass { get; }
+        float Elasticity { get; }
+        Model Model { get; }
 
         Matrix Translation { get; }
     }
