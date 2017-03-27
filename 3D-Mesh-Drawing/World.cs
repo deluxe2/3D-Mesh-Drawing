@@ -43,11 +43,11 @@ namespace _3D_Mesh_Drawing
 
                     if (obj.Position.X < 0)
                     {
-                        obj.Position = new Vector3(-(CubeSize / 2) + obj.Bound.Radius, obj.Position.Y, obj.Position.Z);
+                        obj.Position = new Vector3(-(CubeSize / 2), obj.Position.Y, obj.Position.Z);
                     }
                     else
                     {
-                        obj.Position = new Vector3((CubeSize / 2)- obj.Bound.Radius, obj.Position.Y, obj.Position.Z);
+                        obj.Position = new Vector3((CubeSize / 2), obj.Position.Y, obj.Position.Z);
                     }
                 }
                 if (Math.Abs(obj.Position.Y) >= CubeSize / 2)
@@ -55,11 +55,11 @@ namespace _3D_Mesh_Drawing
                     obj.Speed = new Vector3(obj.Speed.X, -obj.Speed.Y, obj.Speed.Z)  * obj.Elasticity;
                     if (obj.Position.Y < 0)
                     {
-                        obj.Position = new Vector3(obj.Position.X, -(CubeSize / 2) + obj.Bound.Radius, obj.Position.Z);
+                        obj.Position = new Vector3(obj.Position.X, -(CubeSize / 2), obj.Position.Z);
                     }
                     else
                     {
-                        obj.Position = new Vector3(obj.Position.X, (CubeSize / 2) - obj.Bound.Radius, obj.Position.Z);
+                        obj.Position = new Vector3(obj.Position.X, (CubeSize / 2), obj.Position.Z);
                     }
                 }
                 if (Math.Abs(obj.Position.Z) >= CubeSize / 2)
@@ -67,11 +67,11 @@ namespace _3D_Mesh_Drawing
                     obj.Speed = new Vector3(obj.Speed.X, obj.Speed.Y, -obj.Speed.Z) * obj.Elasticity;
                     if (obj.Position.Z < 0)
                     {
-                        obj.Position = new Vector3(obj.Position.X, obj.Position.Y, -(CubeSize / 2) + obj.Bound.Radius);
+                        obj.Position = new Vector3(obj.Position.X, obj.Position.Y, -(CubeSize / 2));
                     }
                     else
                     {
-                        obj.Position = new Vector3(obj.Position.X, obj.Position.Y, (CubeSize / 2) - obj.Bound.Radius);
+                        obj.Position = new Vector3(obj.Position.X, obj.Position.Y, (CubeSize / 2));
                     }
                 }
             }

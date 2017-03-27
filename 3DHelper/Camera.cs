@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -30,7 +31,10 @@ namespace _3DHelper
         }
 
 
-        public Matrix View => Matrix.CreateLookAt(position, target, Vector3.Transform(Vector3.Up, Matrix.CreateFromQuaternion(rotation)));
+        public Matrix View
+            =>
+                Matrix.CreateLookAt(position, target,
+                    Vector3.Transform(Vector3.Up, Matrix.CreateFromQuaternion(rotation)));
 
         public Matrix Projection
         {
@@ -67,7 +71,7 @@ namespace _3DHelper
             {
                 if (state.IsKeyDown(Keys.W))
                 {
-                    pitch += MathHelper.ToRadians(5.0f/60);
+                    pitch += MathHelper.ToRadians(5.0f / 60);
                 }
                 if (state.IsKeyDown(Keys.S))
                 {
@@ -81,8 +85,9 @@ namespace _3DHelper
                 {
                     yaw -= MathHelper.ToRadians(5.0f / 60);
                 }
-                rotation = Quaternion.CreateFromYawPitchRoll(yaw,pitch,0.0f);
-                target = Vector3.Transform(Vector3.Forward, Matrix.CreateFromQuaternion(rotation) * Matrix.CreateTranslation(position));
+                rotation = Quaternion.CreateFromYawPitchRoll(yaw, pitch, 0.0f);
+                target = Vector3.Transform(Vector3.Forward,
+                    Matrix.CreateFromQuaternion(rotation) * Matrix.CreateTranslation(position));
             }
             else
             {
@@ -114,9 +119,16 @@ namespace _3DHelper
             }
         }
 
+        public void Draw(SpriteBatch batch, SpriteFont font)
+        {
+            batch.Begin();
+            batch.DrawString(font, position.ToString(), new Vector2(10, 10), Color.White);
+            batch.End();
+        }
+
         private void MoveCamera(Vector3 direction)
         {
-            var add = Vector3.Transform(direction, Matrix.CreateFromQuaternion(rotation))*CameraSpeed;
+            var add = Vector3.Transform(direction, Matrix.CreateFromQuaternion(rotation)) * CameraSpeed;
             position += add;
             target += add;
         }

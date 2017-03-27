@@ -13,7 +13,11 @@ namespace _3D_Mesh_Drawing
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+
+        private SpriteFont font;
+
         private Model ball;
+        private Model plane;
 
         private World world;
 
@@ -59,13 +63,15 @@ namespace _3D_Mesh_Drawing
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
             ball = Content.Load<Model>("ball");
+            plane = Content.Load<Model>("FracturedPlane");
+            font = Content.Load<SpriteFont>("Font");
 
-            engine = new PhysikEngine(9.81f, world,true);
+            engine = new PhysikEngine(9.81f, world);
 
             engine.AddObject(new Ball(ball,Vector3.Zero,Vector3.Zero, true, 1,1));
 
             var r = new Random();
-            for (int i = 0; i < 50; i++)
+            for (int i = 0; i < 25; i++)
             {
                 engine.AddObject(new Ball(ball, new Vector3(r.Next(-100, 100), r.Next(-100, 100), r.Next(-100, 100)),
                     new Vector3(r.Next(10, 100), r.Next(10, 100), r.Next(10, 100)), false,
@@ -116,6 +122,8 @@ namespace _3D_Mesh_Drawing
             engine.Draw(camera);
 
             world.DrawWorld(camera);
+
+            camera.Draw(spriteBatch,font);
 
             base.Draw(gameTime);
         }
