@@ -63,7 +63,7 @@ namespace _3DHelper
 
             if (state.IsKeyDown(Keys.F))
             {
-                target = Vector3.Zero;
+                target = Vector3.Forward;
                 position = new Vector3(0, 0, 10);
             }
 
@@ -71,19 +71,19 @@ namespace _3DHelper
             {
                 if (state.IsKeyDown(Keys.W))
                 {
-                    pitch += MathHelper.ToRadians(5.0f / 60);
+                    pitch += MathHelper.ToRadians(CameraSpeed / 60);
                 }
                 if (state.IsKeyDown(Keys.S))
                 {
-                    pitch -= MathHelper.ToRadians(5.0f / 60);
+                    pitch -= MathHelper.ToRadians(CameraSpeed / 60);
                 }
                 if (state.IsKeyDown(Keys.A))
                 {
-                    yaw += MathHelper.ToRadians(5.0f / 60);
+                    yaw += MathHelper.ToRadians(CameraSpeed / 60);
                 }
                 if (state.IsKeyDown(Keys.D))
                 {
-                    yaw -= MathHelper.ToRadians(5.0f / 60);
+                    yaw -= MathHelper.ToRadians(CameraSpeed / 60);
                 }
                 rotation = Quaternion.CreateFromYawPitchRoll(yaw, pitch, 0.0f);
                 target = Vector3.Transform(Vector3.Forward,
@@ -119,10 +119,11 @@ namespace _3DHelper
             }
         }
 
-        public void Draw(SpriteBatch batch, SpriteFont font)
+        public void Draw(SpriteBatch batch, SpriteFont font,Texture2D texture, Vector2 position)
         {
             batch.Begin();
             batch.DrawString(font, position.ToString(), new Vector2(10, 10), Color.White);
+            batch.Draw(texture,position,Color.White);
             batch.End();
         }
 

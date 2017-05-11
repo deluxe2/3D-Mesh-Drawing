@@ -15,6 +15,7 @@ namespace _3D_Mesh_Drawing
         SpriteBatch spriteBatch;
 
         private SpriteFont font;
+        private Texture2D fadenkreuz;
 
         private Model ball;
         private Model plane;
@@ -25,7 +26,7 @@ namespace _3D_Mesh_Drawing
 
         private Camera camera;
 
-        private Vector2 mousePos;
+        private bool shotFired;
 
         public Game1()
         {
@@ -44,12 +45,11 @@ namespace _3D_Mesh_Drawing
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            camera = new Camera(new Vector3(0, 0, 2000), new Vector3(0,-0.2f,-1), MathHelper.PiOver4,
-                (float) graphics.PreferredBackBufferWidth / (float) graphics.PreferredBackBufferHeight, 1.0f, 10000.0f,
-                5.0f);
-            mousePos = Mouse.GetState().Position.ToVector2();
+            camera = new Camera(new Vector3(0, 0, 9000), Vector3.Forward, MathHelper.PiOver4,
+                (float) graphics.PreferredBackBufferWidth / (float) graphics.PreferredBackBufferHeight, 1.0f, 100000.0f,
+                50.0f);
 
-            world = new World(2000f, this.GraphicsDevice);
+            world = new World(10000f, this.GraphicsDevice);
 
             base.Initialize();
         }
@@ -65,17 +65,16 @@ namespace _3D_Mesh_Drawing
             ball = Content.Load<Model>("ball");
             plane = Content.Load<Model>("FracturedPlane");
             font = Content.Load<SpriteFont>("Font");
+            fadenkreuz = Content.Load<Texture2D>("Fadenkreuz");
 
             engine = new PhysikEngine(9.81f, world);
 
-            engine.AddObject(new Ball(ball,Vector3.Zero,Vector3.Zero, true, 1,1));
-
             var r = new Random();
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < 50; i++)
             {
                 engine.AddObject(new Ball(ball, new Vector3(r.Next(-100, 100), r.Next(-100, 100), r.Next(-100, 100)),
-                    new Vector3(r.Next(10, 100), r.Next(10, 100), r.Next(10, 100)), false,
-                    0.95f, (float)(r.Next(10, 100) + r.NextDouble())));
+                    new Vector3(r.Next(10, 1000), r.Next(10, 1000), r.Next(10, 1000)), false,
+                    0.90f, (float) (r.Next(10, 200) + r.NextDouble())));
             }
 
 
@@ -103,8 +102,29 @@ namespace _3D_Mesh_Drawing
                 Exit();
 
             // TODO: Add your update logic here
+
+            //Shrinks World
+            //if (world.CubeSize > 2000f)
+            //{
+            //    world.CubeSize -= 5f;
+            //}
+
             camera.UpdateCamera();
             engine.Update(gameTime);
+
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+            {
+                shotFired = true;
+            }
+            else
+            {
+                if (shotFired)
+                {
+                    engine.AddObject(new Ball(ball, camera.Position,
+                        Vector3.Normalize(camera.Target - camera.Position) * 100f, false, 0.95f, 150));
+                    shotFired = false;
+                }
+            }
 
             base.Update(gameTime);
         }
@@ -123,8 +143,10 @@ namespace _3D_Mesh_Drawing
 
             world.DrawWorld(camera);
 
-            camera.Draw(spriteBatch,font);
+            camera.Draw(spriteBatch, font, fadenkreuz,
+                new Vector2(graphics.PreferredBackBufferWidth / 2 - 16, graphics.PreferredBackBufferHeight / 2 - 16));
 
+            graphics.GraphicsDevice.DepthStencilState = DepthStencilState.Default;
             base.Draw(gameTime);
         }
     }
