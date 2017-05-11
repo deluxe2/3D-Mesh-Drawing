@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using OpenTK.Graphics;
@@ -14,8 +15,6 @@ namespace _3DHelper
     public class PhysikEngine
     {
         private List<IPhysikObject> objects;
-
-        //private Octree oct;
 
         private IWorld World;
 
@@ -67,19 +66,15 @@ namespace _3DHelper
                 o.Position += o.Speed;
             }
 
-            //var add = oct.Update();
-            //foreach (var physikObject in add)
-            //{
-            //    oct.Add(physikObject);
-            //}
-
             for (int j = 0; j < objects.Count; j++)
             {
                 for (int i = j + 1; i < objects.Count; i++)
                 {
-                    if (objects[i].Bound.Intersects(objects[j].Bound))
+                    if (objects[i].Bound.Intersects(objects[j].Bound) && !objects[i].Equals(objects[j]))
                     {
-                        Collision(objects[i], objects[j]);
+                        var i1 = i;
+                        var j1 = j;
+                        ThreadPool.QueueUserWorkItem(o => Collision(objects[i1], objects[j1]));
                     }
                 }
                 World.WorldCollision(objects[j]);
@@ -88,40 +83,37 @@ namespace _3DHelper
 
         private void Collision(IPhysikObject obj1, IPhysikObject obj2)
         {
-            if (!obj1.Equals(obj2))
+            var vMittelpunkt = obj1.Position - obj2.Position;
+
+            var angleY = (float) Math.Atan2(vMittelpunkt.Z, vMittelpunkt.X);
+            var angleZ = (float) Math.Atan2(vMittelpunkt.Y, vMittelpunkt.X);
+
+            var rotationmatrix = Matrix.CreateRotationY(-angleY) * Matrix.CreateRotationZ(-angleZ);
+
+            var v1Transformed = Vector3.Transform(obj1.Speed, rotationmatrix);
+            var v2Transformed = Vector3.Transform(obj2.Speed, rotationmatrix);
+
+            var v1 = 2 * ((v1Transformed.X * obj1.Mass + obj2.Mass * v2Transformed.X) / (obj1.Mass + obj2.Mass)) -
+                     v1Transformed.X;
+            var v2 = 2 * ((v1Transformed.X * obj1.Mass + obj2.Mass * v2Transformed.X) / (obj1.Mass + obj2.Mass)) -
+                     v2Transformed.X;
+
+            var rotationmatrix2 = Matrix.CreateRotationZ(angleZ) * Matrix.CreateRotationY(angleY);
+
+            obj1.Speed = Vector3.Transform(new Vector3(v1, v1Transformed.Y, v1Transformed.Z) * obj1.Elasticity,
+                rotationmatrix2);
+            obj2.Speed = Vector3.Transform(new Vector3(v2, v2Transformed.Y, v2Transformed.Z) * obj2.Elasticity,
+                rotationmatrix2);
+
+            var radidiff = obj1.Bound.Radius + obj2.Bound.Radius - vMittelpunkt.Length();
+
+            obj1.Position += Vector3.Transform(new Vector3(-radidiff / 2.0f, 0, 0), rotationmatrix2);
+            obj2.Position += Vector3.Transform(new Vector3(radidiff / 2.0f, 0, 0), rotationmatrix2);
+
+            if (vMittelpunkt.Length() > (obj1.Position - obj2.Position).Length())
             {
-                var vMittelpunkt = obj1.Position - obj2.Position;
-
-                float angleY = (float) Math.Atan2(vMittelpunkt.Z, vMittelpunkt.X);
-                float angleZ = (float) Math.Atan2(vMittelpunkt.Y, vMittelpunkt.X);
-
-                var rotationmatrix = Matrix.CreateRotationY(-angleY) * Matrix.CreateRotationZ(-angleZ);
-
-                var v1Transformed = Vector3.Transform(obj1.Speed, rotationmatrix);
-                var v2Transformed = Vector3.Transform(obj2.Speed, rotationmatrix);
-
-                var v1 = 2 * ((v1Transformed.X * obj1.Mass + obj2.Mass * v2Transformed.X) / (obj1.Mass + obj2.Mass)) -
-                         v1Transformed.X;
-                var v2 = 2 * ((v1Transformed.X * obj1.Mass + obj2.Mass * v2Transformed.X) / (obj1.Mass + obj2.Mass)) -
-                         v2Transformed.X;
-
-                var rotationmatrix2 = Matrix.CreateRotationZ(angleZ)*Matrix.CreateRotationY(angleY) ;
-
-                obj1.Speed = Vector3.Transform(new Vector3(v1, v1Transformed.Y, v1Transformed.Z) * obj1.Elasticity,
-                    rotationmatrix2);
-                obj2.Speed = Vector3.Transform(new Vector3(v2, v2Transformed.Y, v2Transformed.Z) * obj2.Elasticity,
-                    rotationmatrix2);
-
-                float radidiff = obj1.Bound.Radius + obj2.Bound.Radius - vMittelpunkt.Length();
-
-                obj1.Position += Vector3.Transform(new Vector3(-radidiff / 2.0f, 0, 0), rotationmatrix2);
-                obj2.Position += Vector3.Transform(new Vector3(radidiff / 2.0f, 0, 0), rotationmatrix2);
-
-                if (vMittelpunkt.Length() > (obj1.Position - obj2.Position).Length())
-                {
-                    obj1.Position += Vector3.Transform(new Vector3(radidiff, 0, 0), rotationmatrix2);
-                    obj2.Position += Vector3.Transform(new Vector3(-radidiff, 0, 0), rotationmatrix2);
-                }
+                obj1.Position += Vector3.Transform(new Vector3(radidiff, 0, 0), rotationmatrix2);
+                obj2.Position += Vector3.Transform(new Vector3(-radidiff, 0, 0), rotationmatrix2);
             }
         }
 

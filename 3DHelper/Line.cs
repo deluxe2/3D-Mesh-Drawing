@@ -55,7 +55,5 @@ namespace _3DHelper
                 device.DrawPrimitives(PrimitiveType.LineStrip, 0, 1);
             }
         }
-
-
     }
 }

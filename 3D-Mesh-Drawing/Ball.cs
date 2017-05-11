@@ -14,7 +14,7 @@ namespace _3D_Mesh_Drawing
 
         public Vector3 Position { get; set; }
         public Vector3 Speed { get; set; }
-        public BoundingSphere Bound  => new BoundingSphere(Position,Mass);
+        public BoundingSphere Bound  => new BoundingSphere(Position,Model.Meshes[0].BoundingSphere.Radius * Mass);
         public bool Static { get; set; }
         public float Mass { get; }
         public float Elasticity { get; }
