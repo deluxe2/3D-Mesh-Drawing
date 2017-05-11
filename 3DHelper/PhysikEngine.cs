@@ -4,11 +4,6 @@ using System.IO;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using OpenTK.Graphics;
-using GL = OpenTK.Graphics.OpenGL.GL;
-using ShaderType = OpenTK.Graphics.OpenGL.ShaderType;
-using StringName = OpenTK.Graphics.OpenGL.StringName;
-using Vector3 = Microsoft.Xna.Framework.Vector3;
 
 namespace _3DHelper
 {
@@ -20,34 +15,13 @@ namespace _3DHelper
 
         public float Gravity { get; set; }
 
-        private bool Gpu;
-        private int computeobject;
-        private int program;
-        private GraphicsContext context;
 
-        public PhysikEngine(float gravity, IWorld world, bool gpu)
+        public PhysikEngine(float gravity, IWorld world)
         {
             Gravity = gravity;
-            Gpu = gpu;
             objects = new List<IPhysikObject>();
             World = world;
             //oct = new Octree(4, 0, world.CubeSize, Vector3.Zero);
-            if (gpu)
-            {
-                var window = new OpenTK.GameWindow();
-                context = new GraphicsContext(GraphicsMode.Default, window.WindowInfo);
-                Version version = new Version(GL.GetString(StringName.Version).Substring(0, 3));
-                Version target = new Version(4, 3);
-                if (version < target)
-                {
-                    throw new NotSupportedException(String.Format("OpenGL {0} is required (you only have {1}).", target,
-                        version));
-                }
-                using (var stream = new StreamReader("Shader/collision.glsl"))
-                {
-                    CreateShaders(stream.ReadToEnd(),out computeobject, out program);
-                }
-            }
         }
 
         public void AddObject(IPhysikObject obj)
