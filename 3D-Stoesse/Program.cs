@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace _3D_Mesh_Drawing
+namespace _3D_Stoesse
 {
 #if WINDOWS || LINUX
     /// <summary>

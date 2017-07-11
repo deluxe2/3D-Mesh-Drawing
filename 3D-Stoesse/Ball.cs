@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using _3DHelper;
 
-namespace _3D_Mesh_Drawing
+namespace _3D_Stoesse
 {
     public class Ball:IPhysikObject
     {

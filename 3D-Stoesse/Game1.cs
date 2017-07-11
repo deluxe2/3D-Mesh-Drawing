@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using _3DHelper;
 
-namespace _3D_Mesh_Drawing
+namespace _3D_Stoesse
 {
     /// <summary>
     /// This is the main type for your game.
