@@ -1,0 +1,6 @@
+﻿
+1. Funktion und Ziel des Programmes
+
+	Das vorliegende Programm zeigt Stöße von Punktmassen in einem dreidimensionalen Raum.
+	Es können verschiedene Parameter eingestellt werden, um die Auswirkungen von z. B. der Schwerkraft zu zeigen.
+	Ziel ist es einen alltäglichen physikalischen Vorgang anschaulicher darzustellen.

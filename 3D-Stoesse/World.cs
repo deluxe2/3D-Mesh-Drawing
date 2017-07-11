@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using _3DHelper;
@@ -11,14 +8,14 @@ namespace _3D_Mesh_Drawing
 {
     class World : IWorld
     {
-        private float _cubesize;
+        private float cubesize;
 
         public float CubeSize
         {
-            get { return this._cubesize; }
+            get { return this.cubesize; }
             set
             {
-                _cubesize = value;
+                cubesize = value;
                 ConstructCube();
             }
         }

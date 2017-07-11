@@ -4,10 +4,9 @@ Inhalt Dokumentation CT-Projekt
 Thema: SimulationStöße von Punktmassen im dreidimensionalen Raum
 
 	- 1. Funktion und Ziel des Projektes
-	- 2. Physikalische Grundlagen
-	- 3. Verwendete Komponenten
-	- 4. Ablauf des Programmes
-	- 5. Funktionsweise der einzelnen Klassen und enthaltenen Methoden
+	- 2. Verwendete Komponenten
+	- 3. Ablauf des Programmes
+	- 4. Funktionsweise der einzelnen Klassen und enthaltenen Methoden
 
 	Anhang:
 	- Klassendiagramme

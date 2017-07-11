@@ -1,0 +1,40 @@
+﻿
+3. Ablauf des Programmes
+
+	Der Grundablauf des Programmes wird durch die Standard Game-Klasse des Monogame-Framework festgelegt. 
+	+-------------------------------+
+	| Initialize					|
+	| 	  |							|
+	| LoadContent					|
+	|	  |							|
+	| +--------+					|
+	| | Update |					|
+	| |	  |    |Endlosschleife		|
+	| |  Draw  |bis Spielende		|
+	| +--------+					|
+	|	  |							|
+	| UnloadContent					|
+	+-------------------------------+
+
+	Initialize
+	In der Initialize Methode werden alle benötigten Objekte die nichts mit Contentinhalten(Texturen, Meshes, Sounds, etc.) zu tun haben
+	geladen.In der vorliegenden Simulation werden hier unsere Kameraklasse, unsere Spielwelt und unsere Physikengine initialisiert.
+
+	LoadContent
+	Die LoadContent Methode ist dafür da um externen Content zu laden. Hier wird sie benutzt um 3D-Modelle(Meshes) und Texturen(Sprites) zu
+	laden. Auch unsere Physikobjekte werden mit ihren jetzt geladenen Modellen initialisiert.
+
+	Gameloop
+	Ab hier startet der sogenannte Gameloop die Update und Draw Methoden werden in einer Endlosschleife wiederholt bis das Spiel endet.
+	Der Loop läuft in einer festgelegten Frequenz hier mit 60 Wiederholungen pro Sekunde.
+
+	Update
+	Hier werden alle Objekte bewegt und auf Kollisionen zwischen den sich bewegenden Objekten und der Welt geprüft. Bei einer Kollision werden
+	von der Physikengine die Berechnungen vorgenommen.
+
+	Draw
+	In der Draw Methode wird der Bildschirm neugezeichnet. Hier werden keine Berechnungen mehr durchgeführt.
+
+	UnloadContent
+	Die UnloadContent Methode wird nach dem Gameloop bevor das Spiel geschlossen wird aufgerufen. Hier können zum Beispiel
+	Spielstände gespeichert werden.

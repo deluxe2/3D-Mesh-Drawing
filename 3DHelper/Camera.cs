@@ -20,15 +20,9 @@ namespace _3DHelper
 
         public float CameraSpeed { get; set; }
 
-        public Vector3 Position
-        {
-            get { return position; }
-        }
+        public Vector3 Position => position;
 
-        public Vector3 Target
-        {
-            get { return target; }
-        }
+        public Vector3 Target => target;
 
 
         public Matrix View
@@ -36,10 +30,7 @@ namespace _3DHelper
                 Matrix.CreateLookAt(position, target,
                     Vector3.Transform(Vector3.Up, Matrix.CreateFromQuaternion(rotation)));
 
-        public Matrix Projection
-        {
-            get { return projection; }
-        }
+        public Matrix Projection => projection;
 
         public Camera(Vector3 position, Vector3 target, float fovangle, float aspectratio, float near, float far,
             float speed)

@@ -1,0 +1,14 @@
+﻿
+2. Verwendete Komponenten
+	
+	Für die Simulation wurde die Programmiersprache C# und das Framework Monogame verwendet.
+	Als Programmierumgebung kam Visual Studio 2015 Community Edition zum Einsatz.
+
+	C# ist eine von Microsoft entwickelte Programmiersprache. Die erste Version wurde 2001 vorgestellt. 
+	Aktuell ist Version 7. Seit 2014 ist die Entwicklung des Referenz-Compilers OpenSource und auf Github zu finden.
+	C# greift Konzepte der Programmiersprachen Java, C++, Haskell, C sowie Delphi auf. Das .Net Framework wurde zusammen mit C# vorgestellt
+	und kann alle Klassen und Methoden des Frameworks nutzen.
+
+	Das Framework Monogame ist eine quelloffene Implementierung des nicht mehr weiterentwickelten XNA-Framework von Microsoft. 
+	Monogame stellt Standardklassen für die Spieleentwicklung bereit. Dies sind zum Beispiel eine einfache Game-Klasse und Schnittstellen zur
+	einfachen Benutzung der Grafikkarte.

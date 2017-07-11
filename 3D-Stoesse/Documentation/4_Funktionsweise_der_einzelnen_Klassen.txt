@@ -1,0 +1,113 @@
+﻿
+4. Funktionsweise der einzelnen Klassen und enthaltenen Methoden
+
+	Verwendete Klassen:
+	Camera
+	Physikengine
+	Ball:IPhysikObject
+	World:IWorld
+	Line
+
+	Camera
+	Die Cameraklasse ist dafür da um unsere Sicht auf die Welt zu verwalten.
+
+	+-------------------------------+
+	|	Camera						|
+	+-------------------------------+
+	| - position:Vector3			|
+	| - target:Vector3				|
+	| - yaw:float					|
+	| - pitch:float					|
+	| - rotation:Quaternion			|
+	| - projection:Matrix			|
+	+-------------------------------+
+	| + CameraSpeed:float {get;set} |
+	| + Position{get:position}      |
+	| + Target{get:target}			|
+	| + View:Matrix{get;}			|
+	| + Projection{get:projection}	|
+	+-------------------------------+
+	| + Camera():ctr				|
+	| + Update()					|
+	| + Draw()						|
+	+-------------------------------+
+	| - MoveCamera()				|
+	+-------------------------------+
+
+	
+	Physikengine
+	In der Physikengine werden die Bewegungen der einzelnen Objekte verwaltet. Kollisionen werden hier erkannt und berechnet.
+	Auch das Zeichnen der Objekte läuft über die Engine.
+
+	+-------------------------------+
+	| Physikengine					|
+	+-------------------------------+
+	| - objects:List<IPhysikObject> |
+	| - World:IWorld				|
+	+-------------------------------+
+	| + Gravity:float{get;set;}		|
+	+-------------------------------+
+	| + Physikengine():ctr			|
+	| + AddObject()					|
+	| + Update()					|
+	| + Draw()						|
+	+-------------------------------+
+	| - Collision()					|
+	+-------------------------------+
+
+	Ball
+	Die Ballklasse stellt einen einzelnen Ball da und implementiert das Interface IPhysikObject um von der Physikengine verwaltet werden zu
+	können.
+
+	+-------------------------------+
+	| Ball							|
+	+-------------------------------+
+	| + Position:Vector3{get;set}	|
+	| + Speed:Vector3{get;set}		|
+	| + Bound:Boundingsphere{get;}	|
+	| + Static:bool{get;set}		|
+	| + Mass:float{get;}			|
+	| + Elasticity:float{get;}		|
+	| + Model:Model{get;}			|
+	| + Translation:Matrix{get;}	|
+	+-------------------------------+
+	| + Ball():ctr					|
+	+-------------------------------+
+
+	World
+	Die Worldklasse gibt die Grenzen unseres Spielfeldes an. Hier in unserem Fall ein Würfel. Das Interface IWorld wird Implementiert und stellt
+	die Schnittstelle zur Physikengine da.
+
+	+-------------------------------+
+	| World							|
+	+-------------------------------+
+	| - cubesize:float				|
+	| - bound:Boundingbox			|
+	| - device:Graphicsdevice		|
+	| - cubelines:List<Lines>		|
+	+-------------------------------+
+	| + CubeSize:float{get;set}		|
+	+-------------------------------+
+	| + World():ctr					|
+	| + WorldCollision()			|
+	| + DrawWorld()					|
+	+-------------------------------+
+	| - ConstructCube()				|
+	+-------------------------------+
+
+	Line
+	Die Lineklasse ist eine Hilfsklasse um Linien zwischen zwei Punkten mithilfe von Vertexbuffern direkt über die Grafikkarte zu zeichnen.
+
+	+-------------------------------+
+	| Line							|
+	+-------------------------------+
+	| - A:Vector3					|
+	| - B:Vector3					|
+	| - vertexBuffer:VertexBuffer	|
+	| - device:Graphicsdevice		|
+	| - basicEffect:BasicEffect		|
+	| - world:Matrix				|
+	+-------------------------------+
+	| + Line():ctr					|
+	| + Draw()						|
+	+-------------------------------+

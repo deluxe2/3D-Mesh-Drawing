@@ -54,6 +54,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Documentation\1_Funktion.txt" />
+    <Content Include="Documentation\2_Verwendete_Komponenten.txt" />
+    <Content Include="Documentation\3_Ablauf_des_Programmes.txt" />
+    <Content Include="Documentation\4_Funktionsweise_der_einzelnen_Klassen.txt" />
     <Content Include="Documentation\Inhalt Doku.txt" />
     <Content Include="Icon.ico" />
   </ItemGroup>

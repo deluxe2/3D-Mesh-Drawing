@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -110,31 +109,6 @@ namespace _3DHelper
                     mesh.Draw();
                 }
             }
-        }
-
-        void CreateShaders(string cs, out int computeObject, out int program)
-        {
-            int status_code;
-            string info;
-
-            computeObject = GL.CreateShader(ShaderType.ComputeShader);
-
-            // Compile compute shader
-            GL.ShaderSource(computeObject, cs);
-            GL.CompileShader(computeObject);
-            GL.GetShaderInfoLog(computeObject, out info);
-            GL.GetShader(computeObject, OpenTK.Graphics.OpenGL.ShaderParameter.CompileStatus, out status_code);
-
-            if (status_code != 1)
-                throw new ApplicationException(info);
-
-            program = GL.CreateProgram();
-            GL.AttachShader(program, computeObject);
-
-            GL.DeleteShader(computeObject);
-
-            GL.LinkProgram(program);
-            GL.UseProgram(program);
         }
     }
 }

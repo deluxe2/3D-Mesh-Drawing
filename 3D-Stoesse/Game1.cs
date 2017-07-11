@@ -51,6 +51,8 @@ namespace _3D_Mesh_Drawing
 
             world = new World(10000f, this.GraphicsDevice);
 
+            engine = new PhysikEngine(9.81f, world);
+
             base.Initialize();
         }
 
@@ -66,8 +68,6 @@ namespace _3D_Mesh_Drawing
             plane = Content.Load<Model>("FracturedPlane");
             font = Content.Load<SpriteFont>("Font");
             fadenkreuz = Content.Load<Texture2D>("Fadenkreuz");
-
-            engine = new PhysikEngine(9.81f, world);
 
             var r = new Random();
             for (int i = 0; i < 50; i++)
